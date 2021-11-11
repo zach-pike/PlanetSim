@@ -5,6 +5,7 @@ class DefaultPlanet : public BasicPlanet {
     private:
         Vector2d pos;
         Vector2d vel;
+        Vector2d force;
 
         bool visible = true;
         float mass;
@@ -16,27 +17,22 @@ class DefaultPlanet : public BasicPlanet {
         bool debug = false;
     public:
 
-        DefaultPlanet(float mass, float radius, std::string planetID) {
-            DefaultPlanet::mass = mass;
-            DefaultPlanet::radius = radius;
-
-            DefaultPlanet::planetID = planetID;
-        }
-
-        void SetPosition(Vector2d pos) {
-            DefaultPlanet::pos = pos;
-        }
+        DefaultPlanet(float vMass, float vRadius, Vector2d vPos, Vector2d vVel, std::string vPlanetID) : mass{vMass}, radius{vRadius}, pos{vPos}, vel{vVel}, planetID{vPlanetID} {}
 
         Vector2d GetPosition() {
             return pos;
         }
 
-        void SetVelocity(Vector2d vel) {
-            DefaultPlanet::vel = vel;
-        }
-
         Vector2d GetVelocity() {
             return vel;
+        }
+
+        void ApplyForce(Vector2d newForce) {
+            force += newForce;
+        }
+
+        void ApplyForceScalarTowards(double scalar, Vector2d towards) {
+            ApplyForce((towards - pos) * scalar);
         }
 
         void DrawPlanet() {
@@ -45,9 +41,12 @@ class DefaultPlanet : public BasicPlanet {
             }
         }
 
-        void MoveByVelocity() {
-            pos.x += vel.x;
-            pos.y += vel.y;
+        void PhysicsStep() {
+            auto accel = force / mass;
+
+            vel += accel;
+            pos += vel;
+            force = Vector2d();
         }
 
         float GetMass() {
