@@ -1,0 +1,3 @@
+#pragma once
+
+// Helper functions in future...
