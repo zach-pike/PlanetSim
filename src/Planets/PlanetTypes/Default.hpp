@@ -32,7 +32,7 @@ class DefaultPlanet : public BasicPlanet {
         }
 
         void ApplyForceScalarTowards(double scalar, Vector2d towards) {
-            ApplyForce((towards - pos) * scalar);
+            ApplyForce(((towards - pos).Unit()) * scalar);
         }
 
         void DrawPlanet() {

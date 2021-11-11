@@ -12,7 +12,7 @@ int main(void) {
 
     ToggleFullscreen();
 
-    auto planet1 = std::make_shared<DefaultPlanet>(100, 10, Vector2d( 150, 350 ), Vector2d( 4, 0 ), "Planet");
+    auto planet1 = std::make_shared<DefaultPlanet>(1000, 10, Vector2d( 150, 350 ), Vector2d( 4, 0 ), "Planet");
     planet1->SetColor(ORANGE);
 
     auto planet2 = std::make_shared<DefaultPlanet>(10, 4, Vector2d( 150, 550 ), Vector2d( 0.5, 0 ), "Moon");

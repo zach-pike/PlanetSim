@@ -77,12 +77,10 @@ class PlanetManager {
                         // Planet gravity
                         
                         auto distance = (planet->GetPosition() - otherPlanet->GetPosition()).Magnitude();
-                        auto focus = (planet->GetPosition() + otherPlanet->GetPosition()) / 2;
-
                         auto forceScalar = (G * planet->GetMass() * otherPlanet->GetMass()) / (distance * distance);
 
-                        planet->ApplyForceScalarTowards(forceScalar, focus);
-                        otherPlanet->ApplyForceScalarTowards(forceScalar, focus);
+                        planet->ApplyForceScalarTowards(forceScalar, otherPlanet->GetPosition());
+                        // otherPlanet->ApplyForceScalarTowards(forceScalar, planet->GetPosition());
                     }
                 }
 
