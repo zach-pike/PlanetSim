@@ -6,26 +6,16 @@ class StationaryPlanet : public BasicPlanet {
         Vector2d pos;
         float mass;
         float radius;
-        std::string pid;
+        std::string planetID;
 
         Color color = WHITE;
         bool debug = false;
 
     public:
-        StationaryPlanet(float mass, Vector2d pos, float radius, std::string id) {
-            StationaryPlanet::mass = mass;
-            StationaryPlanet::pos = pos;
-            StationaryPlanet::radius = radius;
-            StationaryPlanet::pid = id;
-        }
+        StationaryPlanet(float vMass, float vRadius, Vector2d vPos, std::string vPlanetID) : mass{vMass}, radius{vRadius}, pos{vPos}, planetID{vPlanetID} {}
 
-        void SetPosition(Vector2d pos) {
-            StationaryPlanet::pos = pos;
-        }
-
-        void SetVelocity(Vector2d vel) {
-            // Daedon at the door
-        }
+        void ApplyForce(Vector2d) {}
+        void ApplyForceScalarTowards(double, Vector2d) {}
 
         Vector2d GetVelocity() {
             return Vector2d( 0, 0 );
@@ -39,14 +29,14 @@ class StationaryPlanet : public BasicPlanet {
             DrawCircleV(pos.ToRaylib(), radius, color);
         }
 
-        void MoveByVelocity() {}
+        void PhysicsStep() {}
 
         float GetMass() {
             return mass;
         }
 
         std::string GetID() {
-            return pid;
+            return planetID;
         }
 
         void SetVisible(bool vis) {}
