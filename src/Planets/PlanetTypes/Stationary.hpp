@@ -3,7 +3,7 @@
 
 class StationaryPlanet : public BasicPlanet {
     private:
-        Vector2 pos;
+        Vector2d pos;
         float mass;
         float radius;
         std::string pid;
@@ -12,45 +12,31 @@ class StationaryPlanet : public BasicPlanet {
         bool debug = false;
 
     public:
-        StationaryPlanet(float mass, Vector2 pos, float radius, std::string id) {
+        StationaryPlanet(float mass, Vector2d pos, float radius, std::string id) {
             StationaryPlanet::mass = mass;
             StationaryPlanet::pos = pos;
             StationaryPlanet::radius = radius;
             StationaryPlanet::pid = id;
         }
 
-        void SetPosition(Vector2 pos) {
+        void SetPosition(Vector2d pos) {
             StationaryPlanet::pos = pos;
         }
 
-        void SetVelocity(Vector2 vel) {
+        void SetVelocity(Vector2d vel) {
             // Daedon at the door
         }
 
-        Vector2 GetVelocity() {
-            return Vector2{ 0, 0 };
+        Vector2d GetVelocity() {
+            return Vector2d( 0, 0 );
         }
 
-        Vector2 GetPosition() {
+        Vector2d GetPosition() {
             return pos;
         }
 
         void DrawPlanet() {
-            DrawCircleV(pos, radius, color);
-
-            if (debug)
-                DrawText(
-                    FormatText(
-                        "PLANET: %s X %d Y %d",
-                        pid.c_str(),
-                        (int)pos.x,
-                        (int)pos.y
-                    ), 
-                    pos.x + radius + 10, 
-                    (pos.y - radius) - 5, 
-                    20,
-                    WHITE
-                );
+            DrawCircleV(pos.ToRaylib(), radius, color);
         }
 
         void MoveByVelocity() {}

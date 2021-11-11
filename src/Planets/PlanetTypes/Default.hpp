@@ -3,8 +3,8 @@
 
 class DefaultPlanet : public BasicPlanet {
     private:
-        Vector2 pos = { 0, 0 };
-        Vector2 vel = { 0, 0 };
+        Vector2d pos;
+        Vector2d vel;
 
         bool visible = true;
         float mass;
@@ -23,40 +23,25 @@ class DefaultPlanet : public BasicPlanet {
             DefaultPlanet::planetID = planetID;
         }
 
-        void SetPosition(Vector2 pos) {
+        void SetPosition(Vector2d pos) {
             DefaultPlanet::pos = pos;
         }
 
-        Vector2 GetPosition() {
+        Vector2d GetPosition() {
             return pos;
         }
 
-        void SetVelocity(Vector2 vel) {
+        void SetVelocity(Vector2d vel) {
             DefaultPlanet::vel = vel;
         }
 
-        Vector2 GetVelocity() {
+        Vector2d GetVelocity() {
             return vel;
         }
 
         void DrawPlanet() {
             if (visible) {
-                DrawCircleV(pos, radius, color);
-                if (debug)
-                    DrawText(
-                        FormatText(
-                            "PLANET: %s X %d Y %d Vx %d Vy %d",
-                            planetID.c_str(),
-                            (int)pos.x,
-                            (int)pos.y,
-                            (int)vel.x,
-                            (int)vel.y
-                        ), 
-                        pos.x + radius + 10, 
-                        (pos.y - radius) - 5, 
-                        20,
-                        WHITE
-                    );
+                DrawCircleV(pos.ToRaylib(), radius, color);
             }
         }
 
