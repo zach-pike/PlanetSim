@@ -3,14 +3,15 @@
 #include "Helper.hpp"
 #include <cmath>
 #include <string>
+#include "../Vector2.h"
 
 class BasicPlanet {
     public:
-        virtual void SetPosition(Vector2) = 0;
-        virtual void SetVelocity(Vector2) = 0;
+        virtual void ApplyForce(Vector2d) = 0;
+        virtual void ApplyForceScalarTowards(double, Vector2d) = 0;
 
-        virtual Vector2 GetVelocity() = 0;
-        virtual Vector2 GetPosition() = 0;
+        virtual Vector2d GetVelocity() = 0;
+        virtual Vector2d GetPosition() = 0;
 
         virtual bool GetVisible() = 0;
         virtual void SetVisible(bool) = 0;
@@ -25,7 +26,7 @@ class BasicPlanet {
 
         virtual void DrawPlanet() = 0;
 
-        virtual void MoveByVelocity() = 0;
+        virtual void PhysicsStep() = 0;
 
         virtual float GetMass() = 0;
 

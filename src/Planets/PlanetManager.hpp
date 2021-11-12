@@ -4,19 +4,20 @@
 #include <cmath>
 #include <algorithm>
 #include <stdio.h>
-
+#include <memory>
 #include "BasePlanets.hpp"
-
 #include "raylib.h"
+
+
 
 class PlanetManager {
     private:
-        std::vector<BasicPlanet*> planets;
+        std::vector<std::shared_ptr<BasicPlanet>> planets;
         const float G = 3;
         const float restrictMassMovement = 10;
 
         struct PlanetCopyInfo {
-            BasicPlanet* planetToUpdate;
+            std::shared_ptr<BasicPlanet> planetToUpdate;
             Vector2 velocity;
         };
         Texture2D arrow;
@@ -45,7 +46,7 @@ class PlanetManager {
             }
         }
 
-        void addPlanet(BasicPlanet* planet) {
+        void addPlanet(std::shared_ptr<BasicPlanet> planet) {
             planets.push_back(planet);
         }
 
@@ -61,9 +62,9 @@ class PlanetManager {
                         // Star collision
                         if (
                             CheckCollisionCircles(
-                                planet->GetPosition(),
+                                planet->GetPosition().ToRaylib(),
                                 planet->GetRadius(),
-                                otherPlanet->GetPosition(),
+                                otherPlanet->GetPosition().ToRaylib(),
                                 otherPlanet->GetRadius()
                             )
                         ) {
@@ -73,53 +74,18 @@ class PlanetManager {
                             continue;
                         }
 
-                        // std::vector<BasicPlanet*>::iterator otherPlanetCopy = std::find(planetsCopy.begin(), planetsCopy.end(), otherPlanet);
+                        // Planet gravity
+                        
+                        auto distance = (planet->GetPosition() - otherPlanet->GetPosition()).Magnitude();
+                        auto forceScalar = (G * planet->GetMass() * otherPlanet->GetMass()) / (distance * distance);
 
-                        // We know the planet is not the one were drawing
-                        // When reading, read 'planets'
-                        // When writing, write to 'planetsCopy'
-
-                        // Calculate the distance between the current planet and the other planet
-                        // Trigonometry time
-                        auto currentPlanetPos = planet->GetPosition();
-                        auto otherPlanetPos = otherPlanet->GetPosition();
-
-                        int a = currentPlanetPos.y - otherPlanetPos.y;
-                        int b = currentPlanetPos.x - otherPlanetPos.x;
-
-                        // Hypotenuse holds our distance
-                        float hypoteneuse = sqrt(pow(a, 2) + pow(b, 2));
-
-                        // Math here...
-
-                        float force = planet->GetMass() * otherPlanet->GetMass() / pow(hypoteneuse, 2);
-                        float angleDeg = (atan2(a, b) * RAD2DEG) - 180;
-
-                        if (angleDeg < 0) angleDeg += 360;
-
-                        float angleRad = angleDeg * DEG2RAD;
-
-                        // printf("Angle of %s to %s %f\n", planet->GetID().c_str(), otherPlanet->GetID().c_str(), angleDeg);
-
-                        // DrawTextureAroundCenter(arrow, currentPlanetPos.x, currentPlanetPos.y, angleDeg + 90);
-
-                        // Calculate Force
-                        float F = (G * planet->GetMass() * otherPlanet->GetMass()) / pow(hypoteneuse, 2);
-
-                        float Fx = F * cos(angleRad);
-                        float Fy = F * sin(angleRad);
-
-                        auto otherPlanetVelocity = planet->GetVelocity();
-
-                        otherPlanetVelocity.x += Fx / (planet->GetMass() / restrictMassMovement);
-                        otherPlanetVelocity.y += Fy / (planet->GetMass() / restrictMassMovement);
-
-                        planet->SetVelocity(otherPlanetVelocity);
+                        planet->ApplyForceScalarTowards(forceScalar, otherPlanet->GetPosition());
+                        // otherPlanet->ApplyForceScalarTowards(forceScalar, planet->GetPosition());
                     }
                 }
 
                 planet->DrawPlanet();
-                planet->MoveByVelocity();
+                planet->PhysicsStep();
             }
         }
 };

@@ -3,64 +3,40 @@
 
 class StationaryPlanet : public BasicPlanet {
     private:
-        Vector2 pos;
+        Vector2d pos;
         float mass;
         float radius;
-        std::string pid;
+        std::string planetID;
 
         Color color = WHITE;
         bool debug = false;
 
     public:
-        StationaryPlanet(float mass, Vector2 pos, float radius, std::string id) {
-            StationaryPlanet::mass = mass;
-            StationaryPlanet::pos = pos;
-            StationaryPlanet::radius = radius;
-            StationaryPlanet::pid = id;
+        StationaryPlanet(float vMass, float vRadius, Vector2d vPos, std::string vPlanetID) : mass{vMass}, radius{vRadius}, pos{vPos}, planetID{vPlanetID} {}
+
+        void ApplyForce(Vector2d) {}
+        void ApplyForceScalarTowards(double, Vector2d) {}
+
+        Vector2d GetVelocity() {
+            return Vector2d( 0, 0 );
         }
 
-        void SetPosition(Vector2 pos) {
-            StationaryPlanet::pos = pos;
-        }
-
-        void SetVelocity(Vector2 vel) {
-            // Daedon at the door
-        }
-
-        Vector2 GetVelocity() {
-            return Vector2{ 0, 0 };
-        }
-
-        Vector2 GetPosition() {
+        Vector2d GetPosition() {
             return pos;
         }
 
         void DrawPlanet() {
-            DrawCircleV(pos, radius, color);
-
-            if (debug)
-                DrawText(
-                    FormatText(
-                        "PLANET: %s X %d Y %d",
-                        pid.c_str(),
-                        (int)pos.x,
-                        (int)pos.y
-                    ), 
-                    pos.x + radius + 10, 
-                    (pos.y - radius) - 5, 
-                    20,
-                    WHITE
-                );
+            DrawCircleV(pos.ToRaylib(), radius, color);
         }
 
-        void MoveByVelocity() {}
+        void PhysicsStep() {}
 
         float GetMass() {
             return mass;
         }
 
         std::string GetID() {
-            return pid;
+            return planetID;
         }
 
         void SetVisible(bool vis) {}

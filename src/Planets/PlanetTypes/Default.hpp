@@ -3,8 +3,9 @@
 
 class DefaultPlanet : public BasicPlanet {
     private:
-        Vector2 pos = { 0, 0 };
-        Vector2 vel = { 0, 0 };
+        Vector2d pos;
+        Vector2d vel;
+        Vector2d force;
 
         bool visible = true;
         float mass;
@@ -16,53 +17,36 @@ class DefaultPlanet : public BasicPlanet {
         bool debug = false;
     public:
 
-        DefaultPlanet(float mass, float radius, std::string planetID) {
-            DefaultPlanet::mass = mass;
-            DefaultPlanet::radius = radius;
+        DefaultPlanet(float vMass, float vRadius, Vector2d vPos, Vector2d vVel, std::string vPlanetID) : mass{vMass}, radius{vRadius}, pos{vPos}, vel{vVel}, planetID{vPlanetID} {}
 
-            DefaultPlanet::planetID = planetID;
-        }
-
-        void SetPosition(Vector2 pos) {
-            DefaultPlanet::pos = pos;
-        }
-
-        Vector2 GetPosition() {
+        Vector2d GetPosition() {
             return pos;
         }
 
-        void SetVelocity(Vector2 vel) {
-            DefaultPlanet::vel = vel;
+        Vector2d GetVelocity() {
+            return vel;
         }
 
-        Vector2 GetVelocity() {
-            return vel;
+        void ApplyForce(Vector2d newForce) {
+            force += newForce;
+        }
+
+        void ApplyForceScalarTowards(double scalar, Vector2d towards) {
+            ApplyForce(((towards - pos).Unit()) * scalar);
         }
 
         void DrawPlanet() {
             if (visible) {
-                DrawCircleV(pos, radius, color);
-                if (debug)
-                    DrawText(
-                        FormatText(
-                            "PLANET: %s X %d Y %d Vx %d Vy %d",
-                            planetID.c_str(),
-                            (int)pos.x,
-                            (int)pos.y,
-                            (int)vel.x,
-                            (int)vel.y
-                        ), 
-                        pos.x + radius + 10, 
-                        (pos.y - radius) - 5, 
-                        20,
-                        WHITE
-                    );
+                DrawCircleV(pos.ToRaylib(), radius, color);
             }
         }
 
-        void MoveByVelocity() {
-            pos.x += vel.x;
-            pos.y += vel.y;
+        void PhysicsStep() {
+            auto accel = force / mass;
+
+            vel += accel;
+            pos += vel;
+            force = Vector2d();
         }
 
         float GetMass() {
