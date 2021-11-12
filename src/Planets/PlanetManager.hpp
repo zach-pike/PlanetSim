@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <set>
 #include <stdio.h>
 
 #include "BasePlanets.hpp"
@@ -12,15 +13,13 @@
 class PlanetManager {
     private:
         std::vector<BasicPlanet*> planets;
-        const float G = 3;
+        const float G = 0.7;
         const float restrictMassMovement = 10;
 
         struct PlanetCopyInfo {
             BasicPlanet* planetToUpdate;
             Vector2 velocity;
         };
-        Texture2D arrow;
-        Image origImage;
 
         void DrawTextureAroundCenter(Texture2D texture, float x, float y, float rot) {
             DrawTexturePro(texture,
@@ -33,11 +32,7 @@ class PlanetManager {
         }
 
     public:
-        PlanetManager() {
-            origImage = LoadImage("arrow.png");
-
-            arrow = LoadTextureFromImage(origImage);
-        }
+        PlanetManager() {}
 
         void toggleAllDebug() {
             for (auto planet : planets) {
@@ -52,13 +47,18 @@ class PlanetManager {
         void RenderLoop() {
             // First we make a copy of all the info about the planets so we can update them all when we are done
 
+            DrawText(FormatText("Number of rendered planets: %d using ~%lu bytes", planets.size(), sizeof(BasicPlanet) * planets.size()), 0, 13, 12, WHITE);
+
+            // To stop adding of the same planet
+            std::set<std::vector<BasicPlanet*>::iterator> toRemove;
+
             for (auto planet : planets) {
                 // Calculate new velocitys for every planet
                 for (auto otherPlanet : planets) {
                     // Check to see if we need to do this iteration
-                    if (otherPlanet != planet && otherPlanet->GetVisible() && planet->GetVisible()) {
+                    if (otherPlanet != planet) {
 
-                        // Star collision
+                        // Planet collision
                         if (
                             CheckCollisionCircles(
                                 planet->GetPosition(),
@@ -67,17 +67,23 @@ class PlanetManager {
                                 otherPlanet->GetRadius()
                             )
                         ) {
-                            planet->SetVisible(false);
-                            otherPlanet->SetVisible(false);
+                            // pop planets from planets array if they can be destoyed
 
+                            if (planet->CanBeDestroyed()) {
+                                auto it = std::find(planets.begin(), planets.end(), planet);
+                                toRemove.insert(it);
+                            }
+
+                            if (otherPlanet->CanBeDestroyed()) {
+                                auto it = std::find(planets.begin(), planets.end(), otherPlanet);
+                                toRemove.insert(it);
+                            }
+
+                            // Restart loop
                             continue;
                         }
 
-                        // std::vector<BasicPlanet*>::iterator otherPlanetCopy = std::find(planetsCopy.begin(), planetsCopy.end(), otherPlanet);
-
                         // We know the planet is not the one were drawing
-                        // When reading, read 'planets'
-                        // When writing, write to 'planetsCopy'
 
                         // Calculate the distance between the current planet and the other planet
                         // Trigonometry time
@@ -111,8 +117,8 @@ class PlanetManager {
 
                         auto otherPlanetVelocity = planet->GetVelocity();
 
-                        otherPlanetVelocity.x += Fx / (planet->GetMass() / restrictMassMovement);
-                        otherPlanetVelocity.y += Fy / (planet->GetMass() / restrictMassMovement);
+                        otherPlanetVelocity.x += Fx / ( planet->GetMass() / restrictMassMovement );
+                        otherPlanetVelocity.y += Fy / ( planet->GetMass() / restrictMassMovement );
 
                         planet->SetVelocity(otherPlanetVelocity);
                     }
@@ -120,6 +126,16 @@ class PlanetManager {
 
                 planet->DrawPlanet();
                 planet->MoveByVelocity();
+            }
+
+            // Remove the collided planets
+            for (;;) {
+                if (toRemove.size() == 0) break;
+
+                planets.erase(*--toRemove.end());
+
+
+                toRemove.erase(--toRemove.end());
             }
         }
 };

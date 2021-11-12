@@ -100,4 +100,8 @@ class DefaultPlanet : public BasicPlanet {
         void ToggleDebug() {
             debug = !debug;
         }
+
+        bool CanBeDestroyed() const {
+            return true;
+        }
 };

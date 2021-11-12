@@ -21,6 +21,8 @@ class BasicPlanet {
         virtual Color GetColor() = 0;
         virtual void SetColor(Color) = 0;
 
+        virtual bool CanBeDestroyed() const = 0;
+
         virtual void ToggleDebug() = 0;
 
         virtual void DrawPlanet() = 0;

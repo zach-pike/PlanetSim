@@ -88,4 +88,8 @@ class StationaryPlanet : public BasicPlanet {
         void ToggleDebug() {
             debug = !debug;
         }
+
+        bool CanBeDestroyed() const {
+            return false;
+        }
 };
