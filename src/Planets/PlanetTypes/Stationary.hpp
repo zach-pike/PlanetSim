@@ -38,19 +38,19 @@ class StationaryPlanet : public BasicPlanet {
         void DrawPlanet() {
             DrawCircleV(pos, radius, color);
 
-            if (debug)
-                DrawText(
-                    FormatText(
-                        "PLANET: %s X %d Y %d",
-                        pid.c_str(),
-                        (int)pos.x,
-                        (int)pos.y
-                    ), 
-                    pos.x + radius + 10, 
-                    (pos.y - radius) - 5, 
-                    20,
-                    WHITE
-                );
+            // if (debug)
+            //     DrawText(
+            //         FormatText(
+            //             "PLANET: %s X %d Y %d",
+            //             pid.c_str(),
+            //             (int)pos.x,
+            //             (int)pos.y
+            //         ), 
+            //         pos.x + radius + 10, 
+            //         (pos.y - radius) - 5, 
+            //         20,
+            //         WHITE
+            //     );
         }
 
         void MoveByVelocity() {}

@@ -42,21 +42,21 @@ class DefaultPlanet : public BasicPlanet {
         void DrawPlanet() {
             if (visible) {
                 DrawCircleV(pos, radius, color);
-                if (debug)
-                    DrawText(
-                        FormatText(
-                            "PLANET: %s X %d Y %d Vx %d Vy %d",
-                            planetID.c_str(),
-                            (int)pos.x,
-                            (int)pos.y,
-                            (int)vel.x,
-                            (int)vel.y
-                        ), 
-                        pos.x + radius + 10, 
-                        (pos.y - radius) - 5, 
-                        20,
-                        WHITE
-                    );
+                // if (debug)
+                    // DrawText(
+                    //     FormatText(
+                    //         "PLANET: %s X %d Y %d Vx %d Vy %d",
+                    //         planetID.c_str(),
+                    //         (int)pos.x,
+                    //         (int)pos.y,
+                    //         (int)vel.x,
+                    //         (int)vel.y
+                    //     ), 
+                    //     pos.x + radius + 10, 
+                    //     (pos.y - radius) - 5, 
+                    //     20,
+                    //     WHITE
+                    // );
             }
         }
 

@@ -47,7 +47,7 @@ class PlanetManager {
         void RenderLoop() {
             // First we make a copy of all the info about the planets so we can update them all when we are done
 
-            DrawText(FormatText("Number of rendered planets: %d using ~%lu bytes", planets.size(), sizeof(BasicPlanet) * planets.size()), 0, 13, 12, WHITE);
+            // DrawText(FormatText("Number of rendered planets: %d using ~%lu bytes", planets.size(), sizeof(BasicPlanet) * planets.size()), 0, 13, 12, WHITE);
 
             // To stop adding of the same planet
             std::set<std::vector<BasicPlanet*>::iterator> toRemove;
